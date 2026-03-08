@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
-import { getSupabaseClient, hasSupabaseEnv } from '@/lib/supabase';
+import { getSupabaseClient } from '@/lib/supabase';
 import { useReveal } from './useReveal';
 
 type AuthMode = 'login' | 'signup';
@@ -213,7 +213,7 @@ export default function AuthSection() {
               />
             </label>
 
-            <button className="auth-submit" type="submit" disabled={loading || !hasSupabaseEnv()}>
+            <button className="auth-submit" type="submit" disabled={loading}>
               {loading ? 'Processing...' : mode === 'signup' ? 'Create account' : 'Log in'}
             </button>
 
