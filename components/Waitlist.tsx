@@ -12,41 +12,21 @@ export default function Waitlist() {
   const [successMessage, setSuccessMessage] = useState("You're on the list. We'll be in touch.");
 
   const handleSubmit = async () => {
-    const trimmedEmail = email.trim().toLowerCase();
-
-    if (!trimmedEmail || !trimmedEmail.includes('@')) {
-      setError('Enter a valid email address.');
-      return;
-    }
-
+    if (!email || !email.includes('@')) return;
     setLoading(true);
-    setError('');
-    setSuccessMessage("You're on the list. We'll be in touch.");
-
-    const response = await fetch('/api/waitlist', {
+ 
+    const res = await fetch('/api/waitlist', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: trimmedEmail,
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
     });
 
-    const payload = (await response.json().catch(() => null)) as { error?: string; message?: string } | null;
-
-    if (!response.ok) {
-      setError(payload?.error ?? 'Unable to join the waitlist right now.');
-      setLoading(false);
-      return;
+    if (res.ok) {
+      setSubmitted(true);
+    } else {
+      alert('Something went wrong. Try again.');
     }
 
-    if (payload?.message) {
-      setSuccessMessage(payload.message);
-    }
-
-    setSubmitted(true);
-    setEmail('');
     setLoading(false);
   };
 
