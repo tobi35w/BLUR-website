@@ -14,7 +14,6 @@ export default function AuthSection() {
   const supabase = useMemo(() => getSupabaseClient(), []);
   const [mode, setMode] = useState<AuthMode>('signup');
   const [session, setSession] = useState<Session | null>(null);
-  const [authReady, setAuthReady] = useState(false);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -25,7 +24,6 @@ export default function AuthSection() {
 
   useEffect(() => {
     if (!supabase) {
-      setAuthReady(true);
       return;
     }
 
@@ -38,12 +36,10 @@ export default function AuthSection() {
 
       if (sessionError) {
         setError(sessionError.message);
-        setAuthReady(true);
         return;
       }
 
       setSession(data.session);
-      setAuthReady(true);
     });
 
     const {
@@ -135,10 +131,6 @@ export default function AuthSection() {
 
     setLoading(false);
   };
-
-  if (!authReady) {
-    return null;
-  }
 
   if (session) {
     return null;
