@@ -7,7 +7,7 @@ import { useReveal } from './useReveal';
 
 type AuthMode = 'login' | 'signup';
 
-const defaultMessage = 'Create your BLUR account or log in below.';
+const defaultMessage = 'Create your BLUR account or log in above.';
 
 export default function AuthSection() {
   const ref = useReveal();
@@ -146,11 +146,6 @@ export default function AuthSection() {
 
       <div className="auth-grid auth-grid-single reveal">
         <div className="auth-card">
-          <div className="auth-session-box auth-session-top">
-            <span className="auth-session-label">Current session</span>
-            <strong>Not logged in</strong>
-          </div>
-
           <div className="auth-toggle" role="tablist" aria-label="Authentication mode">
             <button
               className={mode === 'signup' ? 'active' : ''}
@@ -177,7 +172,7 @@ export default function AuthSection() {
                     type="text"
                     value={firstName}
                     onChange={(event) => setFirstName(event.target.value)}
-                    placeholder="Tobi"
+                    placeholder=""
                     required
                   />
                 </label>
@@ -188,7 +183,7 @@ export default function AuthSection() {
                     type="text"
                     value={lastName}
                     onChange={(event) => setLastName(event.target.value)}
-                    placeholder="Ade"
+                    placeholder=""
                     required
                   />
                 </label>
@@ -201,7 +196,7 @@ export default function AuthSection() {
                 type="email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
-                placeholder="you@blursim.com"
+                placeholder="you@gmail.com"
                 required
               />
             </label>
@@ -224,9 +219,6 @@ export default function AuthSection() {
 
           </form>
 
-          {!hasSupabaseEnv() ? (
-            <p className="auth-error">Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in `.env.local` to enable auth.</p>
-          ) : null}
           {message ? <p className="auth-message">{message}</p> : null}
           {error ? <p className="auth-error">{error}</p> : null}
         </div>
