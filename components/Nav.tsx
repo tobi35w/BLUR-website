@@ -121,7 +121,7 @@ export default function Nav() {
           style={{ background: 'none', border: 'none' }}
         >
           <div className="logo-mark">
-            <Image src="/logo.png" alt="BLUR" width={32} height={32} style={{ objectFit: 'contain', borderRadius: 4 }} />
+            <Image src="/logo.png" alt="BLUR" width={32} height={32} style={{ objectFit: 'cover', borderRadius: '50%' }} />
           </div>
           <div>
             <div className="logo-name">BLUR</div>

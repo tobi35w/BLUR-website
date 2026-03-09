@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     await resend.emails.send({
       from: 'BLUR <tobikolakareem@blursim.com>',
       to: email,
-      subject: "You're on the BLUR waitlist!",
+      subject: "You've Joined the waitlist!",
       text: `Hey,
 
 You just took the first step toward something most people never do, and

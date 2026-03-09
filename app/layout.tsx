@@ -6,6 +6,11 @@ export const metadata: Metadata = {
   description:
     'BLUR is the AI-powered social simulation app. Practice real conversations, get judged, and level up your confidence.',
   metadataBase: new URL('https://blursim.com'),
+  icons: {
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/logo.png',
+  },
   openGraph: {
     title: 'BLUR | Train Your Social Confidence',
     description: 'Practice real social situations with AI. Get judged. Level up.',
