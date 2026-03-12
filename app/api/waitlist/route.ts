@@ -2,15 +2,23 @@ import { Resend } from 'resend';
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
 export async function POST(req: Request) {
+  const resendApiKey = process.env.RESEND_API_KEY;
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  // Prefer service role; fall back to anon since RLS allows public insert.
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const fromEmail = process.env.WAITLIST_FROM_EMAIL || 'BLUR <hello@blursim.com>';
+
+  if (!resendApiKey || !supabaseUrl || !supabaseKey) {
+    return NextResponse.json({ error: 'Missing server environment variables' }, { status: 500 });
+  }
+
+  // Lazily create clients inside the handler to avoid build-time env errors.
+  const resend = new Resend(resendApiKey);
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
   const { email } = await req.json();
+  const source = 'website';
 
   if (!email || !email.includes('@')) {
     return NextResponse.json({ error: 'Invalid email' }, { status: 400 });
@@ -18,8 +26,8 @@ export async function POST(req: Request) {
 
   // Save to Supabase (ignore if email already exists)
   const { error: dbError } = await supabase
-    .from('waitlist')
-    .insert({ email })
+    .from('waitlist_signups')
+    .insert({ email, source })
     .select();
 
   if (dbError && dbError.code !== '23505') {
@@ -31,7 +39,7 @@ export async function POST(req: Request) {
   // Send thank-you email via Resend
   try {
     await resend.emails.send({
-      from: 'BLUR <hello@blursim.com>',
+      from: fromEmail,
       to: email,
       replyTo: 'tobi@blursim.com',
       subject: "You're in. BLUR is coming.",
