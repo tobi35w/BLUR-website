@@ -19,6 +19,7 @@ export async function POST(req: Request) {
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
   const { email } = await req.json();
+  const source = 'website';
 
   if (!email || !email.includes('@')) {
     return NextResponse.json({ error: 'Invalid email' }, { status: 400 });
@@ -26,8 +27,8 @@ export async function POST(req: Request) {
 
   // Save to Supabase (ignore if email already exists)
   const { error: dbError } = await supabase
-    .from('waitlist')
-    .insert({ email })
+    .from('waitlist_signups')
+    .insert({ email, source })
     .select();
 
   if (dbError && dbError.code !== '23505') {
