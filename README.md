@@ -25,11 +25,6 @@ Copy `.env.example` to `.env.local` and fill in values:
 
 - `RESEND_API_KEY` - from Resend dashboard
 - `WAITLIST_FROM_EMAIL` - e.g. `BLUR <hello@blursim.com>`
-- `NEXT_PUBLIC_SUPABASE_URL` - your Supabase project URL
-- `SUPABASE_SERVICE_ROLE_KEY` - preferred for inserting into `waitlist_signups`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - optional if you keep the public insert policy enabled
-
-Supabase schema lives in `supabase/schema.sql` (includes the `waitlist_signups` table and RLS). Run it once in the Supabase SQL editor or via the CLI.
 
 ## Project Structure
 
@@ -75,8 +70,7 @@ In `components/Download.tsx`, replace the `href="#"` on both buttons with your r
 ## Connecting Waitlist Form
 
 Already wired: `components/Waitlist.tsx` POSTs to `/api/waitlist`, which:
-- Inserts the email into `waitlist_signups` in Supabase (source = `website`)
-- Sends a confirmation email through Resend
+- Sends a confirmation email through Resend (no database storage)
 
 Just set the env vars above, deploy, and you're live.
 "# BLUR-website" 
