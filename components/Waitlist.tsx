@@ -12,19 +12,33 @@ export default function Waitlist() {
   const [successMessage, setSuccessMessage] = useState("You're on the list. We'll be in touch.");
 
   const handleSubmit = async () => {
-    if (!email || !email.includes('@')) return;
+    setError('');
+    if (!email || !email.includes('@')) {
+      setError('Enter a valid email.');
+      return;
+    }
     setLoading(true);
  
-    const res = await fetch('/api/waitlist', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email }),
-    });
+    try {
+      const res = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
 
-    if (res.ok) {
-      setSubmitted(true);
-    } else {
-      alert('Something went wrong. Try again.');
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok) {
+        if (data?.message) {
+          setSuccessMessage(data.message);
+        }
+        setSubmitted(true);
+      } else {
+        setError(data?.error || 'Something went wrong. Try again.');
+      }
+    } catch (err) {
+      console.error(err);
+      setError('Network issue. Please try again.');
     }
 
     setLoading(false);
